@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-def SoftChoice(x):
+def soft_choice(x):
     x1 = F.softplus(x[:,:,0,:])
     x2 = F.softplus(x[:,:,1,:])
     x1.requires_grad = True

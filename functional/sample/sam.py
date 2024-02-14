@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.autograd import Function
 import random
 import math
-from .utils import SoftChoice, sample
+from utils.sample.sort_sample import sort_sample
 
 class SAM(nn.Module):
     def __init__(self, 
@@ -19,7 +19,6 @@ class SAM(nn.Module):
         self.pointwise = nn.Sequential(nn.LayerNorm(d_model),
                                        nn.LazyLinear(1))
         self.drop_point = 1 - drop_point
-        self.sample = SoftChoice
 
     def forward(self, x, v=None, mask=None):
         x_fwd = self.pointwise(x) / math.sqrt(2)
@@ -34,4 +33,4 @@ class SAM(nn.Module):
         x_fwd = x_fwd + (1 -  drop_) * (-1e9)
         if v != None:
             x = torch.cat([x, v], dim=-1)
-        return sample(x, x_fwd, n_sampled_points, self.sample)
+        return sort_sample(x, x_fwd, n_sampled_points)
