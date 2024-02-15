@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from approx_gelu import approx_gelu
+from functional.activation.approx_gelu import approx_gelu
 
 def get_activation_fn(activation: str):
     if activation == "relu":

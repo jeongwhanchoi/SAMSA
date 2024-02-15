@@ -4,7 +4,7 @@ from layer.resc import RESC
 from layer.point_layer import RandomColor
 from layer.sequence_layer import LearnableEmbedding
 from layer.pairwise_perceptron import SoftplusPWP
-from layer.relative_sam import RSTL
+from layer.leaky_attention import RSTL
 from layer.sscl import SSCL
 from layer.utils import GlobalNode
 import torch

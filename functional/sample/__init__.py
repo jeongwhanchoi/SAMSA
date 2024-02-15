@@ -1,3 +1,3 @@
-from sam import SAM
+from functional.sample.sam import SAM
 
 __all__ = ['SAM']

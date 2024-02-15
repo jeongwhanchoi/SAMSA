@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from layer.relative_sam.relative_sam_transformer_layer import RelativeScaledDotSAMTransformerEncoderLayer, RelativeEuclideanSAMTransformerEncoderLayer, RelativeCompositeSAMTransformerEncoderLayer
+from layer.leaky_attention.transformer_layer import RelativeScaledDotSAMTransformerEncoderLayer, RelativeEuclideanSAMTransformerEncoderLayer, RelativeCompositeSAMTransformerEncoderLayer
 
 tel_type = {"dot": RelativeScaledDotSAMTransformerEncoderLayer,
             "euclid": RelativeEuclideanSAMTransformerEncoderLayer,

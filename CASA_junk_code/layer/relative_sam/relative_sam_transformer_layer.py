@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 from layer.utils import GRSoftmax, euclidean_score, scale_dot_score, composite_score
-from layer.relative_sam.relative_sam_mha import RelativeScaledDotSAMMultiHeadAttention, RelativeEuclideanSAMMultiHeadAttention, RelativeCompositeSAMMultiHeadAttention, RelativeNeuralSAMMultiHeadAttention
+from layer.leaky_attention.mha import RelativeScaledDotSAMMultiHeadAttention, RelativeEuclideanSAMMultiHeadAttention, RelativeCompositeSAMMultiHeadAttention, RelativeNeuralSAMMultiHeadAttention
 from layer.norm import SequenceFeatureNorm
 from typing import List, Union, Any, Callable, Optional
 from layer.utils import _get_activation_fn
