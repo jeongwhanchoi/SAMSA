@@ -1,11 +1,12 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layer.attention_score import maxout, scaled_dot
-from layer.probability_function import softmax, leaky_softmax, relu_prob, leaky_relu_prob
-from functional import pairwise_concat, pairwise_distance, pairwise_distance_similarity
+from layer.attention.attention_score import maxout, scaled_dot
+from layer.attention.probability_function import softmax, leaky_softmax, relu_prob, leaky_relu_prob
+from layer.attention.relative import pairwise_concat, pairwise_distance, pairwise_distance_similarity
 from layer.attention import TransformerEncoderLayer
-
+from layer.pc_layer import RandomColor
+from layer.head import ClassificationHead, RegressionHead, SegmentationHead
 class TransformerEncoderBlock(nn.Module):
     __constants__ = ['norm_first']
 
@@ -53,3 +54,7 @@ class TransformerEncoderBlock(nn.Module):
         for i in range(len(self.layers)):
             x = self.layers[i](x, position, mask)
         return x
+    
+__all__ = ['TransformerEncoderBlock', 
+           'RandomColor',
+           'ClassificationHead', 'RegressionHead', 'SegmentationHead']

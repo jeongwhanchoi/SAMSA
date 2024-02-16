@@ -1,5 +1,5 @@
 import torch
-from functional.relative.pairwise_distance import pairwise_distance
+from layer.attention.relative.pairwise_distance import pairwise_distance
 
 def pairwise_distance_similarity(x, y):
     with torch.no_grad():

@@ -26,6 +26,7 @@ class Attention(nn.Module):
             distmap = torch.sum(distmap, dim=3)
             distmap_w = F.softplus(self.linear_w(distmap))
             distmap_b = self.linear_b(distmap)
+            distmap_w, distmap_b = distmap_w.permute(0, 3, 1, 2), distmap_b.permute(0, 3, 1, 2)
             scores = scores * distmap_w + distmap_b
 
         if self.is_leaky is True:
