@@ -49,10 +49,21 @@ class TransformerEncoderBlock(nn.Module):
                                                              score_functions, 
                                                              relative_function, 
                                                              probability_function) for _ in range(n_layers)])
+        
+        self.n_layers = n_layers
+        self.d_model = d_model
+        self.learnable_layer_skip = nn.Parameter(torch.zeros(1, 1, 1, self.n_layers, self.n_layers), requires_grad=True)
 
     def forward(self, x, position, mask=None):
+        x_skip = torch.zeros(x.shape[0],
+                             x.shape[1], 
+                             self.d_model, 
+                             self.n_layers,
+                             device=x.device)
+        
         for i in range(len(self.layers)):
-            x = self.layers[i](x, position, mask)
+            x = self.layers[i](x, position, mask) + x_skip[:,:,:,i]
+            x_skip = x_skip + x.unsqueeze(-1) * self.learnable_layer_skip[:,:,:,i,:]
         return x
     
 __all__ = ['TransformerEncoderBlock', 

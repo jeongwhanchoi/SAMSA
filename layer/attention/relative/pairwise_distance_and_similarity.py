@@ -7,4 +7,7 @@ def pairwise_distance_similarity(x, y):
         x_surface, y_surface = x[:,:,3:6], y[:,:,3:6]
         dmap = pairwise_distance(x_coords, y_coords)
         smap = torch.bmm(x_surface, y_surface.transpose(1, 2))
+        smap = smap.unsqueeze(-1)
+        # while True:
+        #     print(dmap.shape, smap.shape)
         return torch.cat([dmap, smap], dim=-1)

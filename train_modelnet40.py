@@ -77,8 +77,8 @@ def augment(pc, input_mask):
         
         # point_cloud[:,:,:3] = point_cloud[:,:,:3] - torch.mean(point_cloud[:,:,:3], dim=1, keepdim=True)
 
-        # """Randomly jittering point cloud"""
-        # point_cloud[:,:,:3] = point_cloud[:,:,:3] * ((torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 2 * 0.001)
+        """Randomly jittering point cloud"""
+        point_cloud[:,:,:3] = point_cloud[:,:,:3] + ((torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 2 * 0.005)
 
         # """Randomly drop normal vectors"""
         # normal_drop = torch.bernoulli(torch.ones(point_cloud.shape[0], point_cloud.shape[1], 3, device=device) * 0.9)
@@ -88,8 +88,8 @@ def augment(pc, input_mask):
         point_cloud[:,:,:3] = point_cloud[:,:,:3] - centroid
         # max_distance = torch.max(torch.sqrt(torch.sum((point_cloud[:,:,:3] - centroid) ** 2, dim=-1, keepdim=True)), dim=1, keepdim=True)[0] * ((torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1)
         # max_distance = torch.max(torch.sqrt(torch.sum((point_cloud[:,:,:3] - centroid) ** 2, dim=-1, keepdim=True)), dim=1, keepdim=True)[0]
-        # max_distance = (torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1
-        # point_cloud[:,:,:3] = point_cloud[:,:,:3] / max_distance
+        max_distance = (torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1
+        point_cloud[:,:,:3] = point_cloud[:,:,:3] * max_distance
     return point_cloud
 
 def centralize_pts(pc, input_mask):
@@ -126,7 +126,7 @@ def train(input_mask: bool,
                             num_category=num_classes,
                             split='train', 
                             process_data=uniform,
-                            transforms=False,
+                            transforms=True,
                             use_uniform_sample=uniform,
                             use_normals=use_normal,
                             num_point=num_points)
@@ -135,7 +135,7 @@ def train(input_mask: bool,
                             num_category=num_classes,
                             split='test', 
                             process_data=uniform,
-                            transforms=input_mask,
+                            transforms=False,
                             use_uniform_sample=uniform,
                             use_normals=use_normal,
                             num_point=num_points)
@@ -203,11 +203,11 @@ def train(input_mask: bool,
             
             points, target = points.cuda(), target.cuda()
             points = points.to(torch.float32)
-            # augmented_points = augment(centralize_pts(points, input_mask), input_mask)
+            augmented_points = augment(centralize_pts(points, input_mask), input_mask)
             real_points = centralize_pts(points, input_mask)
-            # prob = torch.bernoulli(torch.ones(points.shape[0], 1, 1, device=points.device) * 0.0)
-            # points = augmented_points * prob + real_points * (1 - prob)
-            points = real_points
+            prob = torch.bernoulli(torch.ones(points.shape[0], 1, 1, device=points.device) * 1.0)
+            points = augmented_points * prob + real_points * (1 - prob)
+            # points = real_points
             target_oh = F.one_hot(target.long(), num_classes=40).to(points.dtype)
             pred = model(points)
             # pred = checkpoint_sequential(model, 4, points)

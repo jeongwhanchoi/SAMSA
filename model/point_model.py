@@ -59,7 +59,7 @@ class PointModel(nn.Module):
                 x[:, :, :6] = 1.0
 
         #Random features
-        x = torch.cat([x, torch.randn_like(x)], dim=-1)
+        x = torch.cat([x, torch.randn(x.shape[0], x.shape[1], 256, device=x.device)], dim=-1)
         
         for i in range(len(self.layer_list)):
             if isinstance(self.layer_list[i], nn.LazyLinear) or isinstance(self.layer_list[i], nn.Linear):

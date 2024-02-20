@@ -37,7 +37,8 @@ class TransformerEncoderLayer(nn.Module):
         self.dropout1 = nn.Dropout(dropout)
         self.dropout2 = nn.Dropout(dropout)
 
-        self.res_weight = nn.Parameter(torch.zeros(1), requires_grad=True)
+        # self.res_weight = nn.Parameter(torch.zeros(1), requires_grad=True)
+        self.res_weight = nn.Parameter(torch.ones(1), requires_grad=True)
 
         # Legacy string support for activation function.
         if isinstance(activation, str):
