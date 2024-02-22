@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from layer.attention.attention_score import maxout, scaled_dot
 from layer.attention.probability_function import softmax, leaky_softmax, relu_prob, leaky_relu_prob
-from layer.attention.relative import pairwise_concat, pairwise_distance, pairwise_distance_similarity
+from layer.attention.relative import pairwise_concat, pairwise_distance, pairwise_distance_similarity, pairwise_field
 from layer.attention import TransformerEncoderLayer
 from layer.pc_layer import RandomColor
 from layer.head import ClassificationHead, RegressionHead, SegmentationHead
@@ -23,11 +23,13 @@ class TransformerEncoderBlock(nn.Module):
             raise NotImplementedError
 
         if relative_function == "cat":
-            relative_function = pairwise_concat
+            relative_function = pairwise_concat()
         elif relative_function == "dist":
-            relative_function = pairwise_distance
+            relative_function = pairwise_distance()
         elif relative_function == "distsim":
-            relative_function = pairwise_distance_similarity
+            relative_function = pairwise_distance_similarity()
+        elif relative_function == "field":
+            relative_function = pairwise_field()
         else:
             raise NotImplementedError
 
@@ -49,10 +51,25 @@ class TransformerEncoderBlock(nn.Module):
                                                              score_functions, 
                                                              relative_function, 
                                                              probability_function) for _ in range(n_layers)])
+        
+        # self.n_layers = n_layers
+        # self.d_model = d_model
+        # identity_matrix = torch.eye(self.n_layers)
+        # reversal_indices = torch.arange(self.n_layers - 1, -1, -1)
+        # reversal_matrix = identity_matrix[reversal_indices]
+        # self.learnable_layer_skip = nn.Parameter(reversal_matrix.reshape(1, 1, 1, self.n_layers, self.n_layers), requires_grad=True)
 
     def forward(self, x, position, mask=None):
+        # x_skip = torch.zeros(x.shape[0],
+        #                      x.shape[1], 
+        #                      self.d_model, 
+        #                      self.n_layers,
+        #                      device=x.device)
+        
         for i in range(len(self.layers)):
             x = self.layers[i](x, position, mask)
+            # x = self.layers[i](x, position, mask) * 0.5 + x_skip[:,:,:,i] * 0.5
+            # x_skip = x_skip + x.unsqueeze(-1) * self.learnable_layer_skip[:,:,:,i,:]
         return x
     
 __all__ = ['TransformerEncoderBlock', 

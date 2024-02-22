@@ -86,10 +86,8 @@ def augment(pc, input_mask):
         
         centroid = torch.mean(point_cloud[:,:,:3], dim=1, keepdim=True)
         point_cloud[:,:,:3] = point_cloud[:,:,:3] - centroid
-        # max_distance = torch.max(torch.sqrt(torch.sum((point_cloud[:,:,:3] - centroid) ** 2, dim=-1, keepdim=True)), dim=1, keepdim=True)[0] * ((torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1)
-        # max_distance = torch.max(torch.sqrt(torch.sum((point_cloud[:,:,:3] - centroid) ** 2, dim=-1, keepdim=True)), dim=1, keepdim=True)[0]
-        max_distance = (torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1
-        point_cloud[:,:,:3] = point_cloud[:,:,:3] * max_distance
+        # max_distance = (torch.rand(point_cloud.shape[0], 1, 3, device=device) - 0.5) * 0.4 + 1
+        # point_cloud[:,:,:3] = point_cloud[:,:,:3] * max_distance
     return point_cloud
 
 def centralize_pts(pc, input_mask):
@@ -126,7 +124,7 @@ def train(input_mask: bool,
                             num_category=num_classes,
                             split='train', 
                             process_data=uniform,
-                            transforms=True,
+                            transforms=False,
                             use_uniform_sample=uniform,
                             use_normals=use_normal,
                             num_point=num_points)
@@ -135,7 +133,7 @@ def train(input_mask: bool,
                             num_category=num_classes,
                             split='test', 
                             process_data=uniform,
-                            transforms=False,
+                            transforms=True,
                             use_uniform_sample=uniform,
                             use_normals=use_normal,
                             num_point=num_points)
