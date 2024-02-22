@@ -63,23 +63,24 @@ class TransformerEncoderLayer(nn.Module):
     def forward(
             self,
             src: Tensor,
-            position,
+            position=None,
+            relative_map=None,
             mask=None) -> Tensor:
 
         x = src
         if self.norm_first:
-            x_ = self._sa_block(self.norm1(x), position, mask)
+            x_ = self._sa_block(self.norm1(x), position, relative_map, mask)
             x = x[:,:x_.shape[1],:] + x_
             x = x + self._ff_block(self.norm2(x))
         else:
-            x_ = self._sa_block(x, position, mask)
+            x_ = self._sa_block(x, position, relative_map, mask)
             x = self.norm1(x[:,:x_.shape[1],:] + x_)
             x = self.norm2(x + self._ff_block(x))
         return x
 
     # self-attention block
-    def _sa_block(self, x: Tensor, position, mask=None) -> Tensor:
-        x, _ = self.self_attn(x, x, x, position, mask)
+    def _sa_block(self, x: Tensor, position, relative_map, mask=None) -> Tensor:
+        x, _ = self.self_attn(x, x, x, position, relative_map, mask)
         x = x * self.res_weight
         return self.dropout1(x)
 
