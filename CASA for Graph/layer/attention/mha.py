@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from functional import SAM
+from functional import PSAM
 
 class Attention(nn.Module):
     def __init__(self, nhead, score_functions, relative_function, probability_function):
@@ -96,7 +96,7 @@ class MultiHeadAttention(nn.Module):
                  score_functions, relative_function, probability_function):
         super().__init__()
 
-        self.SAM = SAM(n_sampled_points, d_model, drop_point)
+        self.SAM = PSAM(n_sampled_points, d_model, drop_point)
 
         self.att = CMultiHeadAttention(d_model, 
                                        nhead, 
@@ -106,7 +106,7 @@ class MultiHeadAttention(nn.Module):
         
         self.d_model = d_model
         
-    def forward(self, q, k, v, d_q, mask=None):
+    def forward(self, q, k, v, d_q, relative_map, mask=None):
         vdq = torch.cat([v, d_q], dim=-1)
         kvdq, kvdq_top, kvdq_bottom, x_score = self.SAM(k, vdq, mask=mask)
         k, v = kvdq[:,:,:self.d_model], kvdq[:,:,self.d_model:2*self.d_model]
