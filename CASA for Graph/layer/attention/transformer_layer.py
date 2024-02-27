@@ -27,7 +27,7 @@ class TransformerEncoderLayer(nn.Module):
                                             probability_function)
         # Implementation of Feedforward model
         self.linear1 = nn.Linear(d_model, dim_feedforward, bias=bias, **factory_kwargs)
-        self.dropout = nn.Dropout(dropout)
+        self.dropout = nn.Dropout(0.5)
         self.linear2 = nn.Linear(dim_feedforward, d_model, bias=bias, **factory_kwargs)
 
         self.norm_first = norm_first

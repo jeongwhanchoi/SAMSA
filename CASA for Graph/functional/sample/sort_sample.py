@@ -11,8 +11,11 @@ def sort_sample(x, x_score, k):
     x_top, x_score_top = x[:,:k,:], x_score[:,:k,:]
     x_bottom, x_score_bottom = x[:,k:,:], x_score[:,k:,:]
     while x_bottom.shape[1] < k:
+        if x_bottom.shape[1] == 0:
+            x_bottom, x_score_bottom = x_top, torch.ones_like(x_score_top) * -1e8
+            break
         x_bottom = torch.cat([x_bottom, x_bottom], dim=1)
-        x_score_bottom = torch.cat([x_score_bottom, torch.ones_like(x_score_bottom) * -9999], dim=1)
+        x_score_bottom = torch.cat([x_score_bottom, torch.ones_like(x_score_bottom) * -1e8], dim=1)
     x_bottom = torch.cat([x_bottom, x_score_bottom], dim=2)
     x_bottom = shuffle(x_bottom, axis=1)
     x_bottom, x_score_bottom = x_bottom[:,:,:-1], x_bottom[:,:,-1].unsqueeze(-1)
