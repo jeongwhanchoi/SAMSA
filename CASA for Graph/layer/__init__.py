@@ -5,8 +5,8 @@ from layer.attention.attention_score import maxout, scaled_dot
 from layer.attention.probability_function import softmax, leaky_softmax, relu_prob, leaky_relu_prob
 from layer.attention.relative import pairwise_concat, pairwise_distance, pairwise_distance_similarity, pairwise_field
 from layer.attention import TransformerEncoderLayer
-from layer.pc_layer import RandomColor
 from layer.head import ClassificationHead, RegressionHead, SegmentationHead
+
 class TransformerEncoderBlock(nn.Module):
     __constants__ = ['norm_first']
 
@@ -59,7 +59,7 @@ class TransformerEncoderBlock(nn.Module):
         # reversal_matrix = identity_matrix[reversal_indices]
         # self.learnable_layer_skip = nn.Parameter(reversal_matrix.reshape(1, 1, 1, self.n_layers, self.n_layers), requires_grad=True)
 
-    def forward(self, x, position, mask=None):
+    def forward(self, x, position, relative_map, mask=None):
         # x_skip = torch.zeros(x.shape[0],
         #                      x.shape[1], 
         #                      self.d_model, 
@@ -67,11 +67,9 @@ class TransformerEncoderBlock(nn.Module):
         #                      device=x.device)
         
         for i in range(len(self.layers)):
-            x = self.layers[i](x, position, mask)
+            x = self.layers[i](x, position, relative_map, mask)
             # x = self.layers[i](x, position, mask) * 0.5 + x_skip[:,:,:,i] * 0.5
             # x_skip = x_skip + x.unsqueeze(-1) * self.learnable_layer_skip[:,:,:,i,:]
         return x
     
-__all__ = ['TransformerEncoderBlock', 
-           'RandomColor',
-           'ClassificationHead', 'RegressionHead', 'SegmentationHead']
+__all__ = ['TransformerEncoderBlock']

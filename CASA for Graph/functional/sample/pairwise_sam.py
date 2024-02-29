@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.autograd import Function
 import random
 import math
-from functional.sample.sort_sample import sort_sample
+from functional.sample.pairwise_sort_sample import pairwise_sort_sample
 
 class PairwiseSAM(nn.Module):
     def __init__(self, 
@@ -18,7 +18,7 @@ class PairwiseSAM(nn.Module):
                                        nn.LazyLinear(1))
         self.drop_point = 1 - drop_point
 
-    def forward(self, x, v=None, mask=None):
+    def forward(self, x, v=None, relative_map=None, mask=None):
         x_fwd = self.pointwise(x) / math.sqrt(2)
         x_fwd += -1 * torch.log(-1 * torch.log((torch.rand_like(x_fwd) + 1e-20)) + 1e-20)
         if mask is not None:
@@ -31,4 +31,4 @@ class PairwiseSAM(nn.Module):
         x_fwd = x_fwd + (1 -  drop_) * (-1e9)
         if v != None:
             x = torch.cat([x, v], dim=-1)
-        return sort_sample(x, x_fwd, n_sampled_points)
+        return pairwise_sort_sample(x, x_fwd, relative_map, n_sampled_points)

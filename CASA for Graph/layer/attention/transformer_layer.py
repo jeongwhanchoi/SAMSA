@@ -76,7 +76,7 @@ class TransformerEncoderLayer(nn.Module):
             x_ = self._sa_block(x, position, relative_map, mask)
             x = self.norm1(x[:,:x_.shape[1],:] + x_)
             x = self.norm2(x + self._ff_block(x))
-        return x
+        return x * mask.unsqueeze(-1)
 
     # self-attention block
     def _sa_block(self, x: Tensor, position, relative_map, mask=None) -> Tensor:
