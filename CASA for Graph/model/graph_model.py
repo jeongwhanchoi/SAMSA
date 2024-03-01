@@ -2,7 +2,7 @@ import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from layer import TransformerEncoderBlock, ClassificationHead, SegmentationHead
+from layer import TransformerEncoderBlock, ClassificationHead, SegmentationHead, RegressionHead
 
 def create_layer(layer_type, hyperparams):
     if layer_type == "LIN":
@@ -11,6 +11,8 @@ def create_layer(layer_type, hyperparams):
         return TransformerEncoderBlock(*hyperparams)
     elif layer_type == "CLFH":
         return ClassificationHead(*hyperparams)
+    elif layer_type == "REGH":
+        return RegressionHead(*hyperparams)
     elif layer_type == "SEGH":
         return SegmentationHead(*hyperparams)
     else:
@@ -64,7 +66,7 @@ class GraphModel(nn.Module):
     def __getitem__(self, idx):
         return self.layer_list[idx]
 
-def parse_graph_architecture(arch_string, is_normal=False, input_mask=True):
+def parse_graph_architecture(arch_string):
     layer = arch_string.split('@')
     sequential_layer = []
     
@@ -84,4 +86,4 @@ def parse_graph_architecture(arch_string, is_normal=False, input_mask=True):
         sequential_layer.append(layer)
     
     # print("Model architecture consists of: \n", sequential_layer)
-    return GraphModel(sequential_layer, is_normal, input_mask)
+    return GraphModel(sequential_layer)

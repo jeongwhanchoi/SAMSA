@@ -1,3 +1,3 @@
+from model.graph_model import parse_graph_architecture
 
-
-__all__ = ['']
+__all__ = ['parse_graph_architecture']

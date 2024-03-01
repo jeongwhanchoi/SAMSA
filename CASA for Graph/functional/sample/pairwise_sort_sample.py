@@ -13,6 +13,7 @@ def select_k(x, x_score, criteria, k):
 
 def pairwise_sort_sample(x, x_score, relative_map, k): 
     b, ns, nd = x.shape
+    k = min(k, x.shape[1])
     x_top, x_score_top, x_bottom, x_score_bottom, indices_top = select_k(x, x_score, x_score, k)
     while x_bottom.shape[1] < k:
         if x_bottom.shape[1] == 0:
@@ -20,6 +21,7 @@ def pairwise_sort_sample(x, x_score, relative_map, k):
             break
         x_bottom = torch.cat([x_bottom, x_bottom], dim=1)
         x_score_bottom = torch.cat([x_score_bottom, torch.ones_like(x_score_bottom) * -1e8], dim=1)
+    x_bottom, x_score_bottom = x_bottom[:,:k,:], x_score_bottom[:,:k,:]
     x_bottom, x_score_bottom, _, _, indices_below = select_k(x_bottom, x_score_bottom, torch.randn_like(x_score_bottom), k)
     x_top, x_score_top = x_top.unsqueeze(2), x_score_top.unsqueeze(2)
     x_bottom, x_score_bottom = x_bottom.unsqueeze(2), x_score_bottom.unsqueeze(2)

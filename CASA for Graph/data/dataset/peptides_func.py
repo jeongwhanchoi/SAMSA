@@ -4,9 +4,9 @@ import torch.nn.functional as F
 import torch_geometric
 import random
 
-class Peptide_struct():
-    def __init__(self, root):
-        self.dataset = torch_geometric.datasets.LRGBDataset(root, 'Peptides-struct')
+class Peptide_func_dataset():
+    def __init__(self, root, split):
+        self.dataset = torch_geometric.datasets.LRGBDataset(root, 'Peptides-func', split=split)
         self.d_len = len(self.dataset)
         self.indx = [i for i in range(self.d_len)]
         random.shuffle(self.indx)
@@ -17,9 +17,9 @@ class Peptide_struct():
             random.shuffle(self.indx)
         current_indx = self.indx.pop()
         dpoint = self.dataset[current_indx]
-        adjacency_matrix = torch_geometric.utils.to_dense_adj(dpoint.edge_index, edge_attr=dpoint.edge_attr)
+        adjacency_matrix = torch_geometric.utils.to_dense_adj(dpoint.edge_index, edge_attr=dpoint.edge_attr, max_num_nodes=dpoint.x.shape[0])
         node_features = dpoint.x
-        node_features = F.one_hot(node_features, 16).reshape(-1, 16 * 9)
+        node_features = F.one_hot(node_features, 17).reshape(-1, 17 * 9)
         return node_features, adjacency_matrix, dpoint.y
     
     def get_batch(self, batch_size):

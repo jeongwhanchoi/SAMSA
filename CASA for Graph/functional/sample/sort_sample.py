@@ -5,6 +5,7 @@ from functional.sample.soft_choice import soft_choice
 
 def sort_sample(x, x_score, k): 
     b, ns, nd = x.shape
+    k = min(k, x.shape[1])
     x_score, indices = torch.sort(x_score, dim=1, descending=True)
     indices = indices.squeeze(-1)
     x = batched_index_select(x, dim=1, index=indices)
@@ -16,6 +17,7 @@ def sort_sample(x, x_score, k):
             break
         x_bottom = torch.cat([x_bottom, x_bottom], dim=1)
         x_score_bottom = torch.cat([x_score_bottom, torch.ones_like(x_score_bottom) * -1e8], dim=1)
+    x_bottom, x_score_bottom = x_bottom[:,:k,:], x_score_bottom[:,:k,:]
     x_bottom = torch.cat([x_bottom, x_score_bottom], dim=2)
     x_bottom = shuffle(x_bottom, axis=1)
     x_bottom, x_score_bottom = x_bottom[:,:,:-1], x_bottom[:,:,-1].unsqueeze(-1)

@@ -27,6 +27,7 @@ class SAM(nn.Module):
             x_fwd = x_fwd + mask * (-1e9)
 
         n_sampled_points = self.n_sampled_points
+        n_sampled_points = min(n_sampled_points, x.shape[1])
         drop_ = torch.bernoulli(torch.ones(x.shape[0], x.shape[1], device=x.device) * self.drop_point).unsqueeze(dim=2)
         x_fwd = x_fwd + (1 -  drop_) * (-1e9)
         if v != None:
