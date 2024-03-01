@@ -4,9 +4,9 @@ import torch.nn.functional as F
 import torch_geometric
 import random
 
-class Peptide_func():
+class Peptide_struct():
     def __init__(self, root):
-        self.dataset = torch_geometric.datasets.LRGBDataset(root, 'Peptides-func')
+        self.dataset = torch_geometric.datasets.LRGBDataset(root, 'Peptides-struct')
         self.d_len = len(self.dataset)
         self.indx = [i for i in range(self.d_len)]
         random.shuffle(self.indx)
