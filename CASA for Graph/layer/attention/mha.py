@@ -10,8 +10,8 @@ class Attention(nn.Module):
         self.relative_function = relative_function
         self.probability_function = probability_function
         self.is_leaky = probability_function.is_leaky
-        self.linear_w = nn.LazyLinear(nhead)
-        self.linear_b = nn.LazyLinear(nhead)
+        self.linear_w = nn.LazyLinear(nhead, bias=False)
+        self.linear_b = nn.LazyLinear(nhead, bias=False)
         
     def forward(self, q, k, v, c, d_q, d_k_top, d_k_bot, d_k_score, relative_top, relative_bottom):
         # input is 4 dimension tensor

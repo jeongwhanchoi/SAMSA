@@ -50,26 +50,12 @@ class TransformerEncoderBlock(nn.Module):
                                                              drop_point,
                                                              score_functions, 
                                                              relative_function, 
-                                                             probability_function) for _ in range(n_layers)])
-        
-        # self.n_layers = n_layers
-        # self.d_model = d_model
-        # identity_matrix = torch.eye(self.n_layers)
-        # reversal_indices = torch.arange(self.n_layers - 1, -1, -1)
-        # reversal_matrix = identity_matrix[reversal_indices]
-        # self.learnable_layer_skip = nn.Parameter(reversal_matrix.reshape(1, 1, 1, self.n_layers, self.n_layers), requires_grad=True)
+                                                             probability_function,
+                                                             dim_feedforward=d_model*4) for _ in range(n_layers)])
 
     def forward(self, x, position, relative_map, mask=None):
-        # x_skip = torch.zeros(x.shape[0],
-        #                      x.shape[1], 
-        #                      self.d_model, 
-        #                      self.n_layers,
-        #                      device=x.device)
-        
         for i in range(len(self.layers)):
             x = self.layers[i](x, position, relative_map, mask)
-            # x = self.layers[i](x, position, mask) * 0.5 + x_skip[:,:,:,i] * 0.5
-            # x_skip = x_skip + x.unsqueeze(-1) * self.learnable_layer_skip[:,:,:,i,:]
         return x
     
 __all__ = ['TransformerEncoderBlock']

@@ -41,15 +41,10 @@ class GraphModel(nn.Module):
         super().__init__()
         self.layer_list = nn.ModuleList(layer_list)
         self.layer_len = len(self.layer_list)
-        self.normalization = nn.BatchNorm1d(1, affine=False)
-        self.relative_normalization = nn.BatchNorm1d(1, affine=False)
 
     def forward(self, x, relative_map, mask=None): # relative
-        x = self.normalization(x.reshape(-1, 1)).reshape(x.shape)
-        relative_map = self.normalization(relative_map.reshape(-1, 1)).reshape(relative_map.shape)
-
-        #Random features
-        x = torch.cat([x, torch.randn(x.shape[0], x.shape[1], 256, device=x.device)], dim=-1)
+        # #Random features
+        # x = torch.cat([x, torch.randn(x.shape[0], x.shape[1], 256, device=x.device)], dim=-1)
         
         for i in range(len(self.layer_list)):
             if isinstance(self.layer_list[i], nn.LazyLinear) or isinstance(self.layer_list[i], nn.Linear):

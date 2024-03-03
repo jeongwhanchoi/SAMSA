@@ -78,7 +78,6 @@ def train(num_epochs: int,
 
     device = 'cuda'
 
-    num_classes = 40
     train_dataset = Peptide_struct_dataset(root=root,
                                            split='train')
 
@@ -126,16 +125,16 @@ def train(num_epochs: int,
             node_features, adjacency_matrices, label, mask = train_dataset.get_batch(batch_size=batch_size)
             node_features, adjacency_matrices, label, mask = node_features.to(device), adjacency_matrices.to(device), label.to(device), mask.to(device)
             pred = model(node_features, adjacency_matrices, mask)
-            loss = torch.mean((pred - label.squeeze(dim=1)) ** 2)
-
+            loss = nn.MSELoss()(pred, label.squeeze(dim=1))
             loss = loss / accumulate
             loss.backward()# Plot the gradients
-            display_loss = torch.sum(torch.mean(torch.abs(pred - label.squeeze(dim=1)), dim=0)).detach().cpu().item()
+            # display_loss = torch.sum(torch.mean(torch.abs(pred - label.squeeze(dim=1)), dim=0)).detach().cpu().item()
+            display_loss = nn.L1Loss()(pred, label.squeeze(dim=1)).detach().cpu().item()
             loop.set_description("Train Loss: " + str(display_loss))
             mean_loss.append(display_loss)
 
             if step % accumulate == 0:
-                # torch.nn.utils.clip_grad_norm(model.parameters(), max_gradient_norm)
+                torch.nn.utils.clip_grad_norm(model.parameters(), 1.0)
                 optimizer.step()
                 optimizer.zero_grad()
 
@@ -162,10 +161,10 @@ def train(num_epochs: int,
             model = model.eval()
             loop = tqdm(range(test_dataset.d_len // batch_size))
             for i in loop:
-                node_features, adjacency_matrices, label, mask = train_dataset.get_batch(batch_size=batch_size)
+                node_features, adjacency_matrices, label, mask = test_dataset.get_batch(batch_size=batch_size)
                 node_features, adjacency_matrices, label, mask = node_features.to(device), adjacency_matrices.to(device), label.to(device), mask.to(device)
                 pred = model(node_features, adjacency_matrices, mask)
-                loss = torch.sum(torch.mean(torch.abs(pred - label.squeeze(dim=1)), dim=0)).detach().cpu().item()
+                loss = nn.L1Loss()(pred, label.squeeze(dim=1)).detach().cpu().item()
                 test_mean_loss.append(loss)
                 
             test_loss = sum(test_mean_loss) / len(test_mean_loss)

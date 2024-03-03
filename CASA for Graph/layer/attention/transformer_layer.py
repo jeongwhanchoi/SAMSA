@@ -3,8 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 from layer.attention.mha import MultiHeadAttention
+from layer.norm import RMSNorm
 from functional import get_activation_fn
 from typing import List, Union, Any, Callable, Optional
+
 
 class TransformerEncoderLayer(nn.Module):
     __constants__ = ['norm_first']
@@ -33,12 +35,15 @@ class TransformerEncoderLayer(nn.Module):
         self.norm_first = norm_first
         self.norm1 = nn.LayerNorm(d_model, eps=layer_norm_eps, bias=bias, **factory_kwargs)
         self.norm2 = nn.LayerNorm(d_model, eps=layer_norm_eps, bias=bias, **factory_kwargs)
+
+        # self.norm1 = RMSNorm(d_model)
+        # self.norm2 = RMSNorm(d_model)
         
         self.dropout1 = nn.Dropout(dropout)
         self.dropout2 = nn.Dropout(dropout)
 
-        # self.res_weight = nn.Parameter(torch.zeros(1), requires_grad=True)
-        self.res_weight = nn.Parameter(torch.ones(1), requires_grad=True)
+        self.res_weight = nn.Parameter(torch.zeros(1), requires_grad=True)
+        # self.res_weight = nn.Parameter(torch.ones(1), requires_grad=True)
 
         # Legacy string support for activation function.
         if isinstance(activation, str):
@@ -70,13 +75,13 @@ class TransformerEncoderLayer(nn.Module):
         x = src
         if self.norm_first:
             x_ = self._sa_block(self.norm1(x), position, relative_map, mask)
-            x = x[:,:x_.shape[1],:] + x_
-            x = x + self._ff_block(self.norm2(x))
+            x = (x[:,:x_.shape[1],:] + x_) * (1 - mask).unsqueeze(-1)
+            x = (x + self._ff_block(self.norm2(x))) * (1 - mask).unsqueeze(-1)
         else:
             x_ = self._sa_block(x, position, relative_map, mask)
-            x = self.norm1(x[:,:x_.shape[1],:] + x_)
-            x = self.norm2(x + self._ff_block(x))
-        return x * mask.unsqueeze(-1)
+            x = self.norm1(x[:,:x_.shape[1],:] + x_) * (1 - mask).unsqueeze(-1)
+            x = self.norm2(x + self._ff_block(x)) * (1 - mask).unsqueeze(-1)
+        return x
 
     # self-attention block
     def _sa_block(self, x: Tensor, position, relative_map, mask=None) -> Tensor:
