@@ -1,1 +1,1 @@
-# CASA: Convex Attention Score and Sampling-based Self Attention
+# SAMSA: Efficient Transformer for Many Data Modalities
