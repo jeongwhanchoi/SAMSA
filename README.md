@@ -2,6 +2,10 @@
 
 https://arxiv.org/pdf/2408.05391.pdf
 
+Contributors:
+* Le Nhat Minh
+* Hy Truong Son (Correspondent / PI)
+
 ![SAMSA](SAMSA.png)
 
 ## Description
