@@ -44,3 +44,17 @@ This project is licensed under the MIT License
 
 ## Contact Information
 For support, questions, or to report issues, please open an issue on GitHub or reach out on Discord: flily914 (I'll always be there, expect some hours delay).
+
+## Please cite our work
+
+```bibtex
+@misc{lenhat2024samsaefficienttransformerdata,
+      title={SAMSA: Efficient Transformer for Many Data Modalities}, 
+      author={Minh Lenhat and Viet Anh Nguyen and Khoa Nguyen and Duong Duc Hieu and Dao Huu Hung and Truong Son Hy},
+      year={2024},
+      eprint={2408.05391},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2408.05391}, 
+}
+```
