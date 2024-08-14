@@ -40,7 +40,6 @@ pip install nuscenes-devkit
 - The Python Implementations also includes specific experiments. We will work to simplify this into an unified parser working across all datasets, with more diverse optimization scheme
 
 ### Module
-- Modules are implemented in
 - Modules receive a Python dictionary of tensors and output a Python dictionary of tensors
 
 ### Run Experiments
@@ -53,6 +52,7 @@ from src.train_eval.experiment import *
 exp = LRAExperiment(your_experiment_name, your_device(e.g. 'cuda))
 exp.run_experiment()
 ```
+- Current experiments: LRAExperiment, LRARetrievalExperiment, LRGBPeptidesFuncExperiment, LRGBPeptidesStructExperiment, ModelNet40Experiment, ShapeNetPartExperiment
 
 ## License
 This project is licensed under the MIT License 
