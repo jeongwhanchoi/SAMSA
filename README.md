@@ -43,6 +43,17 @@ pip install nuscenes-devkit
 - Modules are implemented in
 - Modules receive a Python dictionary of tensors and output a Python dictionary of tensors
 
+### Run Experiments
+- To run experiment, create an experiment instance and use the method |.run_experiment()|
+- To load experiment, create an experiment instance and use the method |.load_experiment()|. This loads the experiment to its latest checkpoint.
+- Example:
+```
+from src.train_eval.experiment import *
+
+exp = LRAExperiment(your_experiment_name, your_device(e.g. 'cuda))
+exp.run_experiment()
+```
+
 ## License
 This project is licensed under the MIT License 
 
