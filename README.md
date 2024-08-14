@@ -58,7 +58,7 @@ exp.run_experiment()
 This project is licensed under the MIT License 
 
 ## Contact Information
-For support, questions, or to report issues, please open an issue on GitHub or reach out on Discord: flily914 (I'll always be there, expect some hours delay).
+For support, questions, or to report issues, please open an issue on GitHub.
 
 ## Please cite our work
 
