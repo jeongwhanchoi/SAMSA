@@ -9,6 +9,8 @@
 ## Description
 The **Many Data Modality Architecture Research Framework** is a research-oriented project designed to facilitate efficient transformer-based research across a variety of data modalities. This framework is equipped with pre-implemented benchmarks for data types such as point clouds, graphs, and sequences, enabling researchers to focus on developing and testing new models.
 
+![SAMSA](SAMSA.png)
+
 ## Installation
 
 To get started with the Many Data Modality Architecture Research Framework, you'll need the following dependencies:
