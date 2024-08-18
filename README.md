@@ -209,8 +209,8 @@ exp.run_experiment()
 - If finding hard to use / Having an issue -> Contact, there will be some delay (hours).
 - Friend & Message Me at Discord: flily914; mostly being active there; https://discord.gg/G4CH3HjtST
 - Email: 
-    - My advisor: thy@uab.edu
-    - Me: mynlenhat@gmail.com
+    - My advisor (Prof. Hy Truong Son): thy@uab.edu
+    - Me (Le Nhat Minh): mynlenhat@gmail.com
 
 ## Please cite our work if you find it useful
 
