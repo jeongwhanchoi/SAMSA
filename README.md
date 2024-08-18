@@ -1,5 +1,11 @@
 # Many Data Modality Architecture Research Framework
 
+## Papers
+
+* SAMSA: Efficient Transformer for Many Data Modalities, https://arxiv.org/pdf/2408.05391.pdf
+
+* Sampling Foundational Transformer: A Theoretical Perspective, https://arxiv.org/pdf/2408.05822.pdf
+
 ## Description
 The **Many Data Modality Architecture Research Framework** is a research-oriented project designed to facilitate efficient transformer-based research across a variety of data modalities. This framework is equipped with pre-implemented benchmarks for data types such as point clouds, graphs, and sequences, enabling researchers to focus on developing and testing new models.
 
@@ -217,5 +223,14 @@ exp.run_experiment()
       archivePrefix={arXiv},
       primaryClass={cs.LG},
       url={https://arxiv.org/abs/2408.05391}, 
+}
+```
+
+```bibtex
+@article{nguyen2024sampling,
+  title={Sampling Foundational Transformer: A Theoretical Perspective},
+  author={Nguyen, Viet Anh and Lenhat, Minh and Nguyen, Khoa and Hieu, Duong Duc and Hung, Dao Huu and Hy, Truong Son},
+  journal={arXiv preprint arXiv:2408.05822},
+  year={2024}
 }
 ```
